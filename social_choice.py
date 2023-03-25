@@ -1,0 +1,2 @@
+def plurality(preference):
+    pass
