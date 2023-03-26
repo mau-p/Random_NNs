@@ -1,6 +1,6 @@
 import model
 import tensorflow as tf
-import social_choice
+import numpy as np
 
 class Ensemble():
     def __init__(self, data, nn_to_train) -> None:
@@ -21,13 +21,37 @@ class Ensemble():
         for network in self.neural_networks:
             print(f'--------Training Network: #{self.neural_networks.index(network)}')
             trained_model = network.model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=[tf.keras.metrics.Accuracy()])
-            trained_model = network.model.fit(x= self.data['train_x'], y=self.data['train_y'], validation_data=(self.data['val_x'], self.data['val_y']))
+            trained_model = network.model.fit(x= self.data['train_x'], y=self.data['train_y'], validation_data=(self.data['val_x'], self.data['val_y']), batch_size= 4)
             self.trained_models.append(trained_model)
 
     
-    def make_prediction(self, x):
-        predictions = []
+    def make_prediction(self, x, voting_rule):
+        preferences = []
 
-        for network in self.trained_networks:
-            prediction = network.model.predict(x)
-            print(prediction)
+        for network in self.trained_models:
+            x = np.asarray(x)
+            x = x.reshape(1,13,1)
+            prediction = network.model.predict(x)[0]
+            preference = self.prediction_to_profile(prediction)
+            preferences.append(preference)
+
+        return voting_rule(preferences)
+
+    def get_accuracy(self, data, voting_rule):
+        accuracy  = 0
+        for vector, label in zip(data['test_x'], data['test_y']):
+            result = self.make_prediction(vector, voting_rule)
+            if result == label:
+                accuracy += 1
+
+        accuracy /= len(data['test_x'])
+        return accuracy
+    
+    def prediction_to_profile(self, prediction):
+        preferences = []
+        for _ in prediction:
+            best_vote = np.argmax(prediction)
+            preferences.append(best_vote)
+            prediction[best_vote] = -1
+
+        return [x+1 for x in preferences]

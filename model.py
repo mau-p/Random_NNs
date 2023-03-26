@@ -13,8 +13,7 @@ class Model:
         self.model = Sequential()
         self.model.add(Input(shape=(13,1)))
         for _ in range(self.rand_hidden_layers):
-            self.model.add(Dense(units=5, activation='sigmoid'))
+            self.model.add(Dense(units=15, activation='sigmoid'))
         self.model.add(Dropout(self.dropout_rate))
         self.model.add(Flatten())
-        self.model.add(Dense(units=3, activation='sigmoid'))
-
+        self.model.add(Dense(units=3, activation='softmax'))
