@@ -1,4 +1,9 @@
 import model
+
+# Turn off annoying Tensorflow warnings
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
+
 import tensorflow as tf
 import numpy as np
 
@@ -19,12 +24,11 @@ class Ensemble():
     def train_all_NNs(self):
         self.trained_models = []
         for network in self.neural_networks:
-            print(f'--------Training Network: #{self.neural_networks.index(network)}')
+            print(f'--------Training Network: #{self.neural_networks.index(network)+1}')
             trained_model = network.model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=[tf.keras.metrics.Accuracy()])
             trained_model = network.model.fit(x= self.data['train_x'], y=self.data['train_y'], validation_data=(self.data['val_x'], self.data['val_y']), batch_size= 4)
             self.trained_models.append(trained_model)
 
-    
     def make_prediction(self, x, voting_rule):
         preferences = []
 
@@ -33,6 +37,7 @@ class Ensemble():
             x = x.reshape(1,13,1)
             prediction = network.model.predict(x)[0]
             preference = self.prediction_to_profile(prediction)
+            print(f"preferences for network {self.trained_models.index(network)+1}: {preference}")
             preferences.append(preference)
 
         return voting_rule(preferences)
