@@ -1,5 +1,4 @@
 import model
-import tqdm
 
 # Turn off annoying Tensorflow warnings
 import os
