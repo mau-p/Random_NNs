@@ -1,16 +1,19 @@
 import pandas as pd
 import random
 
-
 def _get_data():
-    data = pd.read_csv('wine.data', sep='\t', header=None, index_col=False)
+    data = pd.read_csv('winequality-red.csv', sep='\t', header=None, index_col=False)
     parsed_data = []
+    skip = True
     for row in data.iterrows():
+        if skip:
+            skip = False
+            continue
         vector = row[1].tolist()[0]
-        vector = vector.split(',')
+        vector = vector.split(';')
         vector = [float(x) for x in vector]
-        label = vector[0]
-        vector = vector[1:]
+        label = vector[11]
+        vector = vector[0:10]
         parsed_data.append([vector, label])
 
     random.shuffle(parsed_data)
@@ -28,6 +31,9 @@ def _split_data(data):
     test_x = [item[0] for item in test]
     test_y = [int(item[1]) for item in test]
 
+    count = [train_y.count(i) for i in range(1,11)]
+    print(f'Count of scores: {count}')
+
     train_y = [_one_hot_encoding(item) for item in train_y]
     val_y = [_one_hot_encoding(item) for item in val_y]
 
@@ -36,7 +42,7 @@ def _split_data(data):
     return data
 
 def _one_hot_encoding(item):
-    encoding = [0] * 3
+    encoding = [0] * 10
     encoding[item-1] = 1
     return encoding
 

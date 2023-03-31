@@ -20,12 +20,12 @@ class Model:
 
     def generate_random_model(self):
         self.model = Sequential()
-        self.model.add(Input(shape=(13,1)))
+        self.model.add(Input(shape=(10,1)))
 
         # Select a random activation function
         act = random.choice(self.activations)
         for _ in range(self.rand_hidden_layers):
-            self.model.add(Dense(units=13, activation=act))
+            self.model.add(Dense(units=10, activation='sigmoid'))
         self.model.add(Dropout(self.dropout_rate))
         self.model.add(Flatten())
-        self.model.add(Dense(units=3, activation='softmax'))
+        self.model.add(Dense(units=10, activation='softmax'))
