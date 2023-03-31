@@ -1,8 +1,9 @@
 import pandas as pd
 import random
+from imblearn.under_sampling import RandomUnderSampler
 
 def _get_data():
-    data = pd.read_csv('winequality-red.csv', sep='\t', header=None, index_col=False)
+    data = pd.read_csv('winequality-white.csv', sep='\t', header=None, index_col=False)
     parsed_data = []
     skip = True
     for row in data.iterrows():
@@ -20,8 +21,8 @@ def _get_data():
     return parsed_data
 
 def _split_data(data):
-    train = data[0:int(len(data)*0.7)]
-    val = data[int((len(data)*0.7)):int(len(data)*0.9)]
+    train = data[0:int(len(data)*0.8)]
+    val = data[int((len(data)*0.8)):int(len(data)*0.9)]
     test = data[int((len(data)*0.9)):]
 
     train_x = [item[0] for item in train]
@@ -32,7 +33,13 @@ def _split_data(data):
     test_y = [int(item[1]) for item in test]
 
     count = [train_y.count(i) for i in range(1,11)]
-    print(f'Count of scores: {count}')
+    print(f'Count of scores before resampling: {count}')
+    sampling_strategy = {3: count[2], 4: count[3], 5: int(count[4]/2), 6: int(count[5]/2), 7: count[6], 8: count[7], 9: count[8]}
+    undersample = RandomUnderSampler(sampling_strategy=sampling_strategy)
+    train_x, train_y = undersample.fit_resample(train_x, train_y)
+
+    count = [train_y.count(i) for i in range(1,11)]
+    print(f'Count of scores after resampling: {count}')
 
     train_y = [_one_hot_encoding(item) for item in train_y]
     val_y = [_one_hot_encoding(item) for item in val_y]

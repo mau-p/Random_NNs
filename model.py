@@ -4,8 +4,9 @@ import random
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 
-from keras.layers import Dense, Input, Dropout, Conv1D, Flatten, AveragePooling1D, MaxPooling1D
-from keras import Sequential, callbacks
+from keras.layers import Dense, Input, Dropout, Flatten
+from keras.regularizers import l2
+from keras import Sequential
 
 class Model:
     def __init__(self) -> None:
@@ -25,7 +26,7 @@ class Model:
         # Select a random activation function
         act = random.choice(self.activations)
         for _ in range(self.rand_hidden_layers):
-            self.model.add(Dense(units=10, activation='sigmoid'))
+            self.model.add(Dense(units=10, activation='sigmoid', kernel_regularizer=l2(0.01), bias_regularizer=l2(0.01)))
         self.model.add(Dropout(self.dropout_rate))
         self.model.add(Flatten())
         self.model.add(Dense(units=10, activation='softmax'))
