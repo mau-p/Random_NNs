@@ -30,6 +30,7 @@ def _split_data(data):
 
     train_y = [_one_hot_encoding(item) for item in train_y]
     val_y = [_one_hot_encoding(item) for item in val_y]
+    print(test_y)
 
     data = {'train_x': train_x, 'train_y': train_y, 'val_x': val_x, 'val_y': val_y, 'test_x': test_x, 'test_y': test_y}
 

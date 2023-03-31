@@ -37,7 +37,7 @@ class Ensemble():
             x = x.reshape(1,13,1)
             prediction = network.model.predict(x)[0]
             preference = self.prediction_to_profile(prediction)
-            print(f"preferences for network {self.trained_models.index(network)+1}: {preference}")
+            #print(f"preferences for network {self.trained_models.index(network)+1}: {preference}")
             preferences.append(preference)
 
         return voting_rule(preferences)
@@ -46,6 +46,7 @@ class Ensemble():
         accuracy  = 0
         for vector, label in zip(data['test_x'], data['test_y']):
             result = self.make_prediction(vector, voting_rule)
+            #print(f"result: {result}, label: {label}")
             if result == label:
                 accuracy += 1
 

@@ -12,7 +12,7 @@ class Model:
         self.activations = ['sigmoid', 'relu', 'tanh']
 
         # Select a random number of hidden layers
-        self.rand_hidden_layers = random.randrange(1, 20, 1)
+        self.rand_hidden_layers = random.randrange(10, 16, 1)
         print(f"rand_hidden_layers: {self.rand_hidden_layers}")
         self.dropout_rate = random.uniform(0,0.5)
         self.generate_random_model()
@@ -25,7 +25,7 @@ class Model:
         # Select a random activation function
         act = random.choice(self.activations)
         for _ in range(self.rand_hidden_layers):
-            self.model.add(Dense(units=13, activation=act))
+            self.model.add(Dense(units=13, activation='sigmoid'))
         self.model.add(Dropout(self.dropout_rate))
         self.model.add(Flatten())
         self.model.add(Dense(units=3, activation='softmax'))
