@@ -10,10 +10,8 @@ from keras import Sequential
 
 class Model:
     def __init__(self) -> None:
-        self.activations = ['sigmoid', 'relu', 'tanh']
-
         # Select a random number of hidden layers
-        self.rand_hidden_layers = random.randrange(1, 20, 1)
+        self.rand_hidden_layers = random.randrange(1, 5, 1)
         print(f"rand_hidden_layers: {self.rand_hidden_layers}")
         self.dropout_rate = random.uniform(0,0.5)
         self.generate_random_model()
@@ -21,12 +19,11 @@ class Model:
 
     def generate_random_model(self):
         self.model = Sequential()
-        self.model.add(Input(shape=(10,1)))
+        self.model.add(Dense(units=10, input_shape=(10,1), activation='relu'))
 
-        # Select a random activation function
-        act = random.choice(self.activations)
         for _ in range(self.rand_hidden_layers):
-            self.model.add(Dense(units=10, activation='sigmoid', kernel_regularizer=l2(0.01), bias_regularizer=l2(0.01)))
+            self.model.add(Dense(units=10, activation='relu', kernel_regularizer=l2(0.01), bias_regularizer=l2(0.01)))
+            
         self.model.add(Dropout(self.dropout_rate))
         self.model.add(Flatten())
         self.model.add(Dense(units=10, activation='softmax'))

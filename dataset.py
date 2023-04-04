@@ -1,9 +1,11 @@
 import pandas as pd
 import random
 from imblearn.under_sampling import RandomUnderSampler
+from imblearn.over_sampling import SMOTE
+from imblearn.pipeline import Pipeline
 
 def _get_data():
-    data = pd.read_csv('winequality-red.csv', sep='\t', header=None, index_col=False)
+    data = pd.read_csv('winequality-white.csv', sep='\t', header=None, index_col=False)
     parsed_data = []
     skip = True
     for row in data.iterrows():
@@ -35,14 +37,17 @@ def _split_data(data):
     count = [train_y.count(i) for i in range(1,11)]
     print(f'Count of scores before resampling: {count}')
 
+    #TODO: tweak the sampling strategies, perhaps with combination of SMOTE and undersampling?
+
     # For red wine:
-    sampling_strategy = {3: count[2], 4: count[3], 5: int(count[4]/2), 6: int(count[5]/2), 7: count[6], 8: count[7]}
+    #sampling_strategy = {3: count[2], 4: count[3], 5: int(count[4]/2), 6: int(count[5]/2), 7: count[6], 8: count[7]}
 
     # For white wine:
-    #sampling_strategy = {3: count[2], 4: count[3], 5: int(count[4]/2), 6: int(count[5]/2), 7: count[6], 8: count[7], 9: count[8]}
+    sampling_strategy = {3: count[2], 4: count[3], 5: int(count[4]/2), 6: int(count[5]/2), 7: count[6], 8: count[7], 9: count[8]}
     
-    undersample = RandomUnderSampler(sampling_strategy=sampling_strategy)
-    train_x, train_y = undersample.fit_resample(train_x, train_y)
+    under = RandomUnderSampler(sampling_strategy=sampling_strategy)
+    train_x, train_y = under.fit_resample(train_x, train_y)
+    #train_x, train_y = undersample.fit_resample(train_x, train_y)
 
     count = [train_y.count(i) for i in range(1,11)]
     print(f'Count of scores after resampling: {count}')
