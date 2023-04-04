@@ -39,7 +39,6 @@ class Ensemble():
             preference = self.prediction_to_profile(prediction)
             #print(f"preferences for network {self.trained_models.index(network)+1}: {preference}")
             preferences.append(preference)
-
         return voting_rule(preferences)
 
     def get_accuracy(self, data, voting_rule):

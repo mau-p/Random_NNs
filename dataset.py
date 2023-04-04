@@ -16,6 +16,10 @@ def _get_data():
         vector = vector.split(';')
         vector = [float(x) for x in vector]
         label = vector[11]
+        if (label <= 5):
+            label = 1
+        else:
+            label = 2
         vector = vector[0:10]
         parsed_data.append([vector, label])
 
@@ -33,23 +37,16 @@ def _split_data(data):
     val_y = [int(item[1]) for item in val]
     test_x = [item[0] for item in test]
     test_y = [int(item[1]) for item in test]
-
-    count = [train_y.count(i) for i in range(1,11)]
+    
+    count = [train_y.count(i) for i in range(1, 3)]
     print(f'Count of scores before resampling: {count}')
+
+    sm = SMOTE(random_state=42)
+    train_x, train_y = sm.fit_resample(train_x, train_y)
 
     #TODO: tweak the sampling strategies, perhaps with combination of SMOTE and undersampling?
 
-    # For red wine:
-    #sampling_strategy = {3: count[2], 4: count[3], 5: int(count[4]/2), 6: int(count[5]/2), 7: count[6], 8: count[7]}
-
-    # For white wine:
-    sampling_strategy = {3: count[2], 4: count[3], 5: int(count[4]/2), 6: int(count[5]/2), 7: count[6], 8: count[7], 9: count[8]}
-    
-    under = RandomUnderSampler(sampling_strategy=sampling_strategy)
-    train_x, train_y = under.fit_resample(train_x, train_y)
-    #train_x, train_y = undersample.fit_resample(train_x, train_y)
-
-    count = [train_y.count(i) for i in range(1,11)]
+    count = [train_y.count(i) for i in range(1, 3)]
     print(f'Count of scores after resampling: {count}')
 
     train_y = [_one_hot_encoding(item) for item in train_y]
@@ -60,7 +57,7 @@ def _split_data(data):
     return data
 
 def _one_hot_encoding(item):
-    encoding = [0] * 10
+    encoding = [0] * 2
     encoding[item-1] = 1
     return encoding
 
