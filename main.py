@@ -6,7 +6,7 @@ def main():
     data = dataset.data_pipeline()
 
     # Pass data and number of models to ensemble
-    model_set = ensemble.Ensemble(data, 19)
+    model_set = ensemble.Ensemble(data, 49)
     testing_accuracy_plurality = model_set.get_accuracy(data, social_choice.plurality)
     testing_accuracy_stv = model_set.get_accuracy(data, social_choice.STV)
 

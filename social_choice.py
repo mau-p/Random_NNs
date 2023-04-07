@@ -1,7 +1,7 @@
 import numpy as np
 
 def plurality(profile):
-    count = np.zeros(11)
+    count = np.zeros(2)
 
     for preference in profile:
         count[preference[0]] += 1

@@ -19,11 +19,11 @@ class Model:
 
     def generate_random_model(self):
         self.model = Sequential()
-        self.model.add(Dense(units=6, input_shape=(10,1), activation='relu'))
+        self.model.add(Flatten(input_shape=(10,1)))
 
         for _ in range(self.rand_hidden_layers):
-            self.model.add(Dense(units=6, activation='relu'))
+            self.model.add(Dense(units=128, activation='relu'))
 
         self.model.add(Dropout(self.dropout_rate))
         self.model.add(Flatten())
-        self.model.add(Dense(units=2, activation='softmax'))
+        self.model.add(Dense(units=1, activation='sigmoid'))

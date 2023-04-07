@@ -25,8 +25,8 @@ class Ensemble():
         self.trained_models = []
         for network in self.neural_networks:
             print(f'--------Training Network: #{self.neural_networks.index(network)+1}')
-            trained_model = network.model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=[tf.keras.metrics.Accuracy()])
-            trained_model = network.model.fit(x= self.data['train_x'], y=self.data['train_y'], validation_data=(self.data['val_x'], self.data['val_y']), batch_size= 4)
+            trained_model = network.model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+            trained_model = network.model.fit(x= self.data['train_x'], y=self.data['train_y'], validation_data=(self.data['val_x'], self.data['val_y']), batch_size=16, epochs=50)
             self.trained_models.append(trained_model)
 
     def make_prediction(self, x, voting_rule):
@@ -37,7 +37,6 @@ class Ensemble():
             x = x.reshape(1,10,1)
             prediction = network.model.predict(x)[0]
             preference = self.prediction_to_profile(prediction)
-            #print(f"preferences for network {self.trained_models.index(network)+1}: {preference}")
             preferences.append(preference)
         return voting_rule(preferences)
 
@@ -54,9 +53,9 @@ class Ensemble():
     
     def prediction_to_profile(self, prediction):
         preferences = []
-        for _ in prediction:
-            best_vote = np.argmax(prediction)
-            preferences.append(best_vote)
-            prediction[best_vote] = -1
+        if prediction >= 0.5:
+            preferences = [1,0]
+        else:
+            preferences = [0,1]
 
-        return [x+1 for x in preferences]
+        return preferences
