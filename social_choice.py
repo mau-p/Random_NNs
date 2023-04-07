@@ -1,7 +1,7 @@
 import numpy as np
 
 def plurality(profile):
-    count = np.zeros(4)
+    count = np.zeros(2)
 
     for preference in profile:
         count[preference[0]] += 1
@@ -16,10 +16,11 @@ def STV(profile):
     if profile.shape[1] == 1:
         return profile[0][0]
 
-    counts = np.unique(profile[:, 0], return_counts=True)
+    #TODO: Votes worden nog niet getransferd?
+    counts = np.unique(profile[:, len(profile[0])-1], return_counts=True)
     to_remove = counts[0][np.argmin(counts[1])]
-
     new_profile = []
+
     for pref in profile:
         new_pref = np.delete(pref, np.where(pref == to_remove))
         new_profile.append(new_pref)
