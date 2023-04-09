@@ -12,7 +12,12 @@ class Model:
     def __init__(self) -> None:
         # Select a random number of hidden layers
         self.rand_hidden_layers = random.randrange(1, 10, 1)
-        print(f"rand_hidden_layers: {self.rand_hidden_layers}")
+
+        # Select a random number of neurons
+        neurons = [8, 16, 32, 64, 128]
+        self.no_neurons = random.choice(neurons)
+
+        print(f"rand_hidden_layers: {self.rand_hidden_layers} | no_neurons: {self.no_neurons}")
         self.dropout_rate = random.uniform(0,0.5)
         self.generate_random_model()
         self.results = None
@@ -22,8 +27,7 @@ class Model:
         self.model.add(Flatten(input_shape=(10,1)))
 
         for _ in range(self.rand_hidden_layers):
-            self.model.add(Dense(units=128, activation='relu'))
+            self.model.add(Dense(units=self.no_neurons, activation='relu'))
 
         self.model.add(Dropout(self.dropout_rate))
-        self.model.add(Flatten())
         self.model.add(Dense(units=1, activation='sigmoid'))

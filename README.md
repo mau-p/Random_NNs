@@ -13,3 +13,4 @@ pip install -r requirements.txt
 ```
 python main.py
 ```
+This will prompt the user to give an amount of networks for the ensemble. The model will then begin to train each network and run the election afterwards.

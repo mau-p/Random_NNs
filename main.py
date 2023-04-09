@@ -5,8 +5,10 @@ import social_choice
 def main():
     data = dataset.data_pipeline()
 
+    num_of_networks = input('How many networks do you want to train? (Default: 49) \n')
+    
     # Pass data and number of models to ensemble
-    model_set = ensemble.Ensemble(data, 49)
+    model_set = ensemble.Ensemble(data, int(num_of_networks))
     testing_accuracy_plurality = model_set.get_accuracy(data, social_choice.plurality)
     testing_accuracy_stv = model_set.get_accuracy(data, social_choice.STV)
 
