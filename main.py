@@ -1,6 +1,8 @@
 import dataset
 import ensemble
 import social_choice
+import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1' # Disable GPU, CPU appears to be faster with this model
 
 def main():
     data = dataset.data_pipeline()

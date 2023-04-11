@@ -1,6 +1,7 @@
 import numpy as np
 
 def plurality(profile):
+    print(f"Profile: {profile}")
     count = np.zeros(2)
 
     for preference in profile:
@@ -10,18 +11,16 @@ def plurality(profile):
 
 
 def STV(profile):
-    if not isinstance(profile, np.ndarray):
-        profile = np.array(profile)
+    print(f"Profile: {profile}")
 
-    if profile.shape[1] == 1:
+    if len(profile[0]) == 1:
         return profile[0][0]
 
-    counts = np.unique(profile[:, len(profile[0])-1], return_counts=True)
-    to_remove = counts[0][np.argmin(counts[1])]
-    new_profile = []
-
-    for pref in profile:
-        new_pref = np.delete(pref, np.where(pref == to_remove))
-        new_profile.append(new_pref)
+    count = np.zeros(2)
+    for preference in profile:
+        count[preference[0]] += 1
     
-    return STV(new_profile)
+    to_remove = np.argmin(count)
+    profile = [[alt for alt in pref if alt != to_remove] for pref in profile]
+
+    return STV(profile)
