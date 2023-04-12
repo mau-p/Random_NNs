@@ -1,9 +1,4 @@
 import random
-
-# Turn off annoying Tensorflow warnings
-import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
-
 from keras.layers import Dense, Input, Dropout, Flatten
 from keras.regularizers import l2
 from keras import Sequential

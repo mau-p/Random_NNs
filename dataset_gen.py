@@ -9,8 +9,8 @@ def _generate_data():
     data = make_classification(
         n_samples=5000,
         n_features=num_features,
-        n_informative=7,
-        n_redundant=2,
+        n_informative=3,
+        n_redundant=0,
         n_classes=num_classes,
         random_state=69)
     X_data = np.array(data[0])

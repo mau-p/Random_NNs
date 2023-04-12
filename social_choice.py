@@ -8,7 +8,7 @@ def plurality(profile):
 
     for preference in profile:
         count[preference[0]] += 1
-    
+
     return np.argmax(count)
 
 
@@ -18,6 +18,7 @@ def dictatorship(profile):
 
 
 def STV(profile, removed=[]):
+    # TODO: optimize STV to remove ALL lowest plurality scores
     if len(profile[0]) == 1:
         return profile[0][0]
     
