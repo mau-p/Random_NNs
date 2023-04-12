@@ -3,7 +3,7 @@ import ensemble
 import social_choice
 import os
 import numpy as np
-os.environ['CUDA_VISIBLE_DEVICES'] = '' # Disable GPU, CPU appears to be faster with this model
+os.environ['CUDA_VISIBLE_DEVICES'] = '0' # disable GPU = '', enable GPU = '0'; from experimenting CPU appears to be faster with this model, thus recommend disabling GPU
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 os.environ['AUTOGRAPH_VERBOSITY'] = '1'
 
@@ -23,6 +23,7 @@ def query_user(query, default='y', binary=True):
 
 
 def main():
+    BATCH_SIZE = 512
     stored_profiles = False
     if os.path.isfile('profiles.h5'):
         stored_profiles = True
@@ -37,16 +38,21 @@ def main():
         ans = query_user(f"{len(pre_trained)} models found, use these?")
     if 'y' in ans.lower():
         print(f"Using pre-trained models")
-        model_set = ensemble.Ensemble(models_to_load=pre_trained)
+        model_set = ensemble.Ensemble(models_to_load=pre_trained, batch_size=BATCH_SIZE)
         data = None
     else:
         print(f"Not using pre-trained models")
         num_of_networks = query_user('How many networks do you want to train?', default=49, binary=False)
         data = dataset.data_pipeline()
         # Pass data and number of models to ensemble
-        model_set = ensemble.Ensemble(data, int(num_of_networks))
+        model_set = ensemble.Ensemble(data, int(num_of_networks), batch_size=BATCH_SIZE)
 
-    voting_rules = [social_choice.plurality, social_choice.dictatorship, social_choice.STV]
+    voting_rules = [social_choice.dictatorship,
+                    social_choice.plurality,
+                    social_choice.STV,
+                    social_choice.borda,
+                    social_choice.condorcet,
+                    social_choice.copeland]
 
     if stored_profiles and not data:
         ans = query_user('Profiles already exist, use these?')

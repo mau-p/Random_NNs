@@ -5,10 +5,9 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-BATCH_SIZE = 1024
-
 class Ensemble():
-    def __init__(self, data=None, nn_to_train=0, models_to_load=[]) -> None:
+    def __init__(self, data=None, nn_to_train=0, models_to_load=[], batch_size=32) -> None:
+        self.batch_size = batch_size
         self.data = data
         self.n_of_networks = nn_to_train
         self.trained_models = []
@@ -38,7 +37,7 @@ class Ensemble():
         for network in self.neural_networks:
             print(f'--------Training Network: #{self.neural_networks.index(network)+1}')
             trained_model = network.model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-            trained_model = network.model.fit(x=self.data['train_x'], y=self.data['train_y'], validation_data=(self.data['val_x'], self.data['val_y']), batch_size=BATCH_SIZE, epochs=50)
+            trained_model = network.model.fit(x=self.data['train_x'], y=self.data['train_y'], validation_data=(self.data['val_x'], self.data['val_y']), batch_size=self.batch_size, epochs=50)
             self.trained_models.append(trained_model)
         for network in self.trained_models:
             print(f'Saving model: #{self.trained_models.index(network)+1}')
@@ -51,9 +50,9 @@ class Ensemble():
 
         for network in self.trained_models:
             if self.n_of_networks == 0:
-                predictions = network.predict(data_x, batch_size=BATCH_SIZE)
+                predictions = network.predict(data_x, batch_size=self.batch_size)
             else:
-                predictions = network.model.predict(data_x, batch_size=BATCH_SIZE)
+                predictions = network.model.predict(data_x, batch_size=self.batch_size)
             preferences = self.predictions_to_preferences(predictions)
             for i in range(len(preferences)):
                 profiles[i].append(preferences[i])
@@ -71,6 +70,8 @@ class Ensemble():
             profiles[rule.__name__] = profiles.apply(lambda x: rule(x['profile']), axis=1)
             accuracy = (profiles[rule.__name__] == profiles['label']).astype(int).sum()
             accuracies.update({rule.__name__: (accuracy/len(profiles))})
+        results = profiles.drop(columns=['profile'], axis=1)
+        results.to_csv('results.csv', index=False)
 
         return accuracies
     
