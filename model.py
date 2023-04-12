@@ -30,4 +30,4 @@ class Model:
             self.model.add(Dense(units=self.no_neurons, activation='relu'))
 
         self.model.add(Dropout(self.dropout_rate))
-        self.model.add(Dense(units=1, activation='sigmoid'))
+        self.model.add(Dense(units=5, activation='softmax'))

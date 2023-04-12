@@ -1,8 +1,10 @@
 import numpy as np
+import random
+from collections import Counter
+from operator import itemgetter
 
 def plurality(profile):
-    print(f"Profile: {profile}")
-    count = np.zeros(2)
+    count = np.zeros(5)
 
     for preference in profile:
         count[preference[0]] += 1
@@ -10,17 +12,18 @@ def plurality(profile):
     return np.argmax(count)
 
 
-def STV(profile):
-    print(f"Profile: {profile}")
+def dictatorship(profile):
+    pref = random.choice(profile)
+    return pref[0]
 
+
+def STV(profile, removed=[]):
     if len(profile[0]) == 1:
         return profile[0][0]
-
-    count = np.zeros(2)
-    for preference in profile:
-        count[preference[0]] += 1
     
-    to_remove = np.argmin(count)
+    primary_choice = [pref[0] for pref in profile]
+    count = Counter(primary_choice)
+    to_remove = min(count.items(), key=itemgetter(1))[0]
     profile = [[alt for alt in pref if alt != to_remove] for pref in profile]
 
-    return STV(profile)
+    return STV(profile, removed)

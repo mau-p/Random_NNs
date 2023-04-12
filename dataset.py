@@ -2,42 +2,21 @@ import pandas as pd
 import numpy as np
 import random
 from sklearn.preprocessing import StandardScaler
+from keras.utils.np_utils import to_categorical
 
 def _get_data():
-    data = pd.read_csv('winequality-white.csv', sep='\t', header=None, index_col=False)
-    parsed_data = []
-    skip = True
-    for row in data.iterrows():
-        if skip:
-            skip = False
-            continue
-        vector = row[1].tolist()[0]
-        vector = vector.split(';')
-        vector = [float(x) for x in vector]
-        label = vector[11]
-
-        if label <= 5:
-            label = 0
-        else:
-            label = 1
-            
-        vector = vector[0:10]
-        parsed_data.append([vector, label])
-
-    random.shuffle(parsed_data)
-    return parsed_data
+    data = pd.read_csv('dataset.csv')
+    return data
 
 def _split_data(data):
-    train = data[0:int(len(data)*0.8)]
-    val = data[int((len(data)*0.8)):int(len(data)*0.9)]
-    test = data[int((len(data)*0.9)):]
+    train, val, test = np.split(data.sample(frac=1, random_state=42), [int(.8*len(data)), int(.9*len(data))])
 
-    train_x = [item[0] for item in train]
-    train_y = np.array([int(item[1]) for item in train])
-    val_x = [item[0] for item in val]
-    val_y = np.array([int(item[1]) for item in val])
-    test_x = [item[0] for item in test]
-    test_y = np.array([int(item[1]) for item in test])
+    train_x = train[train.columns[:-1]]
+    train_y = to_categorical(train[train.columns[-1]])
+    val_x = val[val.columns[:-1]]
+    val_y = to_categorical(val[val.columns[-1]])
+    test_x = test[test.columns[:-1]]
+    test_y = to_categorical(test[test.columns[-1]])
 
     scaler = StandardScaler()
     train_x = scaler.fit_transform(train_x)
