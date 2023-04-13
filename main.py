@@ -2,7 +2,7 @@ import dataset
 import ensemble
 import social_choice
 import os
-import numpy as np
+
 os.environ['CUDA_VISIBLE_DEVICES'] = '0' # disable GPU = '', enable GPU = '0'; from experimenting CPU appears to be faster with this model, thus recommend disabling GPU
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 os.environ['AUTOGRAPH_VERBOSITY'] = '1'

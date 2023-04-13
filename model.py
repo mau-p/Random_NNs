@@ -1,6 +1,5 @@
 import random
-from keras.layers import Dense, Input, Dropout, Flatten
-from keras.regularizers import l2
+from keras.layers import Dense, Dropout, Flatten
 from keras import Sequential
 
 class Model:

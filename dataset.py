@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import random
 from sklearn.preprocessing import StandardScaler
 from keras.utils.np_utils import to_categorical
 

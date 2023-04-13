@@ -58,6 +58,7 @@ class Ensemble():
                 profiles[i].append(preferences[i])
         return profiles
 
+
     def get_accuracy(self, voting_rules, data=None):
         accuracies = Counter()
         if data:
@@ -74,6 +75,7 @@ class Ensemble():
         results.to_csv('results.csv', index=False)
 
         return accuracies
+    
     
     def predictions_to_preferences(self, predictions):
         preferences = [list(np.argsort(prediction)[::-1]) for prediction in predictions]

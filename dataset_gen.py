@@ -2,7 +2,6 @@ from sklearn.datasets import make_classification
 import numpy as np
 import pandas as pd
 
-
 def _generate_data():
     num_features = 10
     num_classes = 5
