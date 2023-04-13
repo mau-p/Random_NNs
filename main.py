@@ -23,7 +23,7 @@ def query_user(query, default='y', binary=True):
 
 
 def main():
-    BATCH_SIZE = 512
+    BATCH_SIZE = 128
     stored_profiles = False
     if os.path.isfile('profiles.h5'):
         stored_profiles = True
