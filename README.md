@@ -1,7 +1,14 @@
 # Random_NNs
-Using randomly generated neural networks and voting rules to classify wine quality
 
-Dataset can be found at: http://www3.dsi.uminho.pt/pcortez/wine/
+Using neural networks with a random amount of layers in combination with social choice to perform classifications.
+
+The implemented voting rules are: 
+* Plurality
+* STV
+* Condorcet
+* Borda
+* Copeland
+* Dictatorship
 
 ## 1. Install requirements
 ```
